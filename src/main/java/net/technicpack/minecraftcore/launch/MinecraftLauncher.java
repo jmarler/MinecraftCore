@@ -1,6 +1,6 @@
 /*
  * This file is part of Technic Minecraft Core.
- * Copyright (C) 2013 Syndicate, LLC
+ * Copyright ©2015 Syndicate, LLC
  *
  * Technic Minecraft Core is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,7 @@ package net.technicpack.minecraftcore.launch;
 
 import net.technicpack.launchercore.launch.GameProcess;
 import net.technicpack.launchercore.launch.ProcessExitListener;
+import net.technicpack.launchercore.launch.java.JavaVersionRepository;
 import net.technicpack.minecraftcore.mojang.auth.MojangUser;
 import net.technicpack.launchercore.auth.UserModel;
 import net.technicpack.launchercore.launch.LaunchOptions;
@@ -47,13 +48,17 @@ public class MinecraftLauncher {
     private final IPlatformApi platformApi;
     private final String clientId;
     private final UserModel<MojangUser> userModel;
+    private final JavaVersionRepository javaVersions;
 
-	public MinecraftLauncher(IPlatformApi platformApi, LauncherDirectories directories, UserModel userModel, String clientId) {
+	public MinecraftLauncher(final IPlatformApi platformApi, final LauncherDirectories directories, final UserModel userModel, final String clientId, final JavaVersionRepository javaVersions) {
         this.directories = directories;
         this.platformApi = platformApi;
         this.clientId = clientId;
         this.userModel = userModel;
+        this.javaVersions = javaVersions;
 	}
+
+    public JavaVersionRepository getJavaVersions() { return javaVersions; }
 
 	public GameProcess launch(ModpackModel pack, int memory, LaunchOptions options, CompleteVersion version) throws IOException {
 		return launch(pack, memory, options, null, version);
@@ -84,7 +89,7 @@ public class MinecraftLauncher {
 
 	private List<String> buildCommands(ModpackModel pack, long memory, MojangVersion version, LaunchOptions options) {
 		List<String> commands = new ArrayList<String>();
-		commands.add(OperatingSystem.getJavaDir());
+		commands.add(javaVersions.getSelectedPath());
 
 		OperatingSystem operatingSystem = OperatingSystem.getOperatingSystem();
 
@@ -100,11 +105,13 @@ public class MinecraftLauncher {
 		if (memory >= 2048) {
 			permSize = 256;
 		}
+        commands.add("-Xincgc");
 		commands.add("-XX:MaxPermSize=" + permSize + "m");
 		commands.add("-Djava.library.path=" + new File(pack.getBinDir(), "natives").getAbsolutePath());
 		// Tell forge 1.5 to download from our mirror instead
 		commands.add("-Dfml.core.libraries.mirror=http://mirror.technicpack.net/Technic/lib/fml/%s");
 		commands.add("-Dminecraft.applet.TargetDirectory=" +  pack.getInstalledDirectory().getAbsolutePath());
+        commands.add("-Djava.net.preferIPv4Stack=true");
 
         String javaArguments = version.getJavaArguments();
 

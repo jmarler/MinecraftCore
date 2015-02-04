@@ -1,6 +1,6 @@
 /*
  * This file is part of Technic Minecraft Core.
- * Copyright (C) 2013 Syndicate, LLC
+ * Copyright ©2015 Syndicate, LLC
  *
  * Technic Minecraft Core is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -60,7 +60,7 @@ public class EnsureAssetsIndexTask implements IInstallTask {
 
     @Override
 	public void runTask(InstallTasksQueue queue) throws IOException {
-		String assets = ((InstallTasksQueue<MojangVersion>)queue).getCompleteVersion().getAssetsKey();
+		String assets = ((InstallTasksQueue<MojangVersion>)queue).getMetadata().getAssetsKey();
 
 		if (assets == null || assets.isEmpty()) {
 			assets = "legacy";

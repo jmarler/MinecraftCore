@@ -1,6 +1,6 @@
 /*
  * This file is part of Technic Minecraft Core.
- * Copyright (C) 2013 Syndicate, LLC
+ * Copyright ©2015 Syndicate, LLC
  *
  * Technic Minecraft Core is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@
 
 package net.technicpack.minecraftcore.mojang.auth;
 
+import com.google.common.base.Charsets;
 import net.technicpack.launchercore.auth.IAuthResponse;
 import net.technicpack.launchercore.auth.IGameAuthService;
 import net.technicpack.launchercore.exception.AuthenticationNetworkFailureException;
@@ -76,7 +77,7 @@ public class AuthenticationService implements IGameAuthService<MojangUser> {
         String returnable = null;
 		try {
 			stream = connection.getInputStream();
-            returnable = IOUtils.toString(stream);
+            returnable = IOUtils.toString(stream, Charsets.UTF_8);
 		} catch (IOException e) {
 			stream = connection.getErrorStream();
 

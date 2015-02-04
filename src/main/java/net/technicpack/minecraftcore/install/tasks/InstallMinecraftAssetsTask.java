@@ -1,6 +1,6 @@
 /*
  * This file is part of Technic Minecraft Core.
- * Copyright (C) 2013 Syndicate, LLC
+ * Copyright ©2015 Syndicate, LLC
  *
  * Technic Minecraft Core is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -81,7 +81,7 @@ public class InstallMinecraftAssetsTask implements IInstallTask {
         if (obj.get(virtualField) != null)
             isVirtual = obj.get(virtualField).getAsBoolean();
 
-        ((InstallTasksQueue<MojangVersion>)queue).getCompleteVersion().setAreAssetsVirtual(isVirtual);
+        ((InstallTasksQueue<MojangVersion>)queue).getMetadata().setAreAssetsVirtual(isVirtual);
 
         JsonObject allObjects = obj.get(objectsField).getAsJsonObject();
 
@@ -89,7 +89,7 @@ public class InstallMinecraftAssetsTask implements IInstallTask {
             throw new DownloadException("The assets json file was invalid.");
         }
 
-        String assetsKey = ((InstallTasksQueue<MojangVersion>)queue).getCompleteVersion().getAssetsKey();
+        String assetsKey = ((InstallTasksQueue<MojangVersion>)queue).getMetadata().getAssetsKey();
         if (assetsKey == null || assetsKey.isEmpty())
             assetsKey = "legacy";
 
